@@ -29,4 +29,4 @@
 
 # Код для работы с ботом.
 
-[wemos_dht_tg.c](wemos_dht_tg.c)
+[wemos_dht_bot.c](wemos_dht_bot.c)
