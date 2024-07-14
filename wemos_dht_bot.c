@@ -1,4 +1,4 @@
-# See https://kit.alexgyver.ru/tutorials/fastbot/
+// See https://kit.alexgyver.ru/tutorials/fastbot/
 
 #include "DHT.h"
 
