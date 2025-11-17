@@ -1,17 +1,33 @@
 # Установка менеджера плат
-Поищите “установка WEMOS гайвер” 
+Поищите “установка WEMOS гайвер” для более детальной помощи.
 
 Откройте Настройки. В поле дополнительные устройства вставьте https://arduino.esp8266.com/stable/package_esp8266com_index.json и нажмите ок.
 
-Откройке Иснтрументы, Там где выбор платы, должно появиться подменю с “ESP8266 Boards”. 
+![arduino-настройки.png](arduino-настройки.png)
+
+Откройке Инcтрументы, Там где выбор платы, выберите Менеджер плат. 
+
+![manager_plat.png](manager_plat.png)
+
+В его строке поиска введите esp8266 и установите найденный пакет. 
+
+![manager_plat_chose8266.png](manager_plat_chose8266.png)
+
+Снова откройке Инcтрументы, Там где выбор платы, должно появиться подменю с “ESP8266 Boards”. 
 
 Выбираем там LOLIN (WEMOS) D1 R2 & mini
 
+![manager_plat_chose_D1R2mini.png](manager_plat_chose_D1R2mini.png)
+
 Больше ничего не меняем в настройках платы, устанавливаем порт.
+
+![manager_plat_chose_port.png](manager_plat_chose_port.png)
 
 # Установка дополнительных библиотек для проекта
 * Fastbot от Гайвера
-* DHT11 от Adafruit
+* Adafruit Sensors от Adafruit
+ * зависимость Adafruit Unified Sensors
+
 # Код для датчика влажности и температуры.
 
 [wemos_dht.c](wemos_dht.c)
