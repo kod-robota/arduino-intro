@@ -1,7 +1,7 @@
 //подключение библиотек
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <Servo.h>
+
 
 // набор параметров для создания точки доступа 
 const char *ssid = "Pauk15"; // имя сети
@@ -10,30 +10,8 @@ const char *password = "12345678"; // пароль от сети
 // параметры для создания Web-сервера 
 ESP8266WebServer server(80);
 
-//обозначение сервоприводов
-Servo servo_1;   //левая задняя
-Servo servo_2;   // правая задняя
-Servo servo_3;   // правая передняя
-Servo servo_4;   //левая передняя
-
-//состояние движения
-bool LEFT=0;
-bool FORW=1;
-bool RIGHT=0;
-bool STOP=0;
-
 void setup() {
 
-// подготовка пинов для сервоприводов
-servo_1.attach(D8, 500, 2500);   //левая задняя
-servo_2.attach(D7, 500, 2500);   // правая задняя
-servo_3.attach(D6, 500, 2500);   // правая передняя
-servo_4.attach(D5, 500, 2500);   //левая передняя
-servo_1.write(90);   
-servo_2.write(90);   
-servo_3.write(90);   
-servo_4.write(90);   
-delay(1000);
 
 // Подготовка сервера 
 server.on("/", []() {
@@ -42,44 +20,12 @@ server.send(200, "text/html", webPage());
 
 
 //что происходит при нажатии LEFT
-server.on("/LEFT", [](){
-  LEFT=1;
-  FORW=0;
-  RIGHT=0;
-  STOP=0;
+server.on("/dht", [](){
+ 
   server.send(200, "text/html", webPage());
   delay(100);   
 });
 
-//что происходит при нажатии FORWARD
-server.on("/FORWARD", [](){
-  LEFT=0;
-  FORW=1;
-  RIGHT=0;
-  STOP=0;
-  server.send(200, "text/html", webPage());
-  delay(100);
-});
-
-//что происходит при нажатии RIGHT
-server.on("/RIGHT", [](){
-  LEFT=0;
-  FORW=0;
-  RIGHT=1;
-  STOP=0;
-  server.send(200, "text/html", webPage());
-  delay(100);
-});
-
-//что происходит при нажатии STOP
-server.on("/STOP", [](){
-  LEFT=0;
-  FORW=0;
-  RIGHT=0;
-  STOP=1;
-  server.send(200, "text/html", webPage());
-  delay(100);
-});
     // создание точки доступа
 WiFi.softAP(ssid, password); 
 IPAddress myIP = WiFi.softAPIP();
