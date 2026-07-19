@@ -2,6 +2,11 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
+#define DHTPIN D4     // наш датчик подключен на этот контакт
+#define DHTTYPE DHT11   // тип датчика DHT 11
+
+DHT dht(DHTPIN, DHTTYPE); // инициализируем датчик
+
 
 // набор параметров для создания точки доступа 
 const char *ssid = "Pauk15"; // имя сети
@@ -11,12 +16,14 @@ const char *password = "12345678"; // пароль от сети
 ESP8266WebServer server(80);
 
 void setup() {
+  Serial.begin(115200);
+  dht.begin();
 
-
-// Подготовка сервера 
-server.on("/", []() {
-server.send(200, "text/html", webPage());
-});
+  // Подготовка сервера 
+  server.on("/", []() {
+    server.send(200, "text/html", webPage());
+  }
+  );
 
 
 //что происходит при нажатии LEFT
@@ -27,98 +34,23 @@ server.on("/dht", [](){
 });
 
     // создание точки доступа
-WiFi.softAP(ssid, password); 
-IPAddress myIP = WiFi.softAPIP();
-server.begin();
+ WiFi.softAP(ssid, password); 
+ IPAddress myIP = WiFi.softAPIP();
+ server.begin();
 }
 // создание сервера
+
+
 void loop() {
-server.handleClient();
+ server.handleClient();
 
-if(LEFT==1){
-  for (int i = 0; i<45; i+=5)
-  {
-  servo_1.write(135-i);
-  servo_2.write(135-i);
-  servo_3.write(135-i);
-  servo_4.write(135-i);
-    delay(3);
-  }
-  delay(200);
-  
-  servo_1.write(135);
-  delay(200);
-  
-  servo_2.write(135);
-  delay(200);
- 
-  servo_3.write(135);
-  delay(200);
-  
-  servo_4.write(135);
-  delay(200);
-}
-if(FORW==1){
-  for (int i = 0; i<45; i+=5)
-  {
-  servo_1.write(135-i);//плавный переход ножки в положение 90°
-  servo_2.write(45+i); //плавный переход ножки в положение 90°
-  servo_3.write(45+i); //плавный переход ножки в положение 90°
-  servo_4.write(135-i);//плавный переход ножки в положение 90°
-  delay(3);
-  }
-  delay(200);
-  
-  servo_1.write(135);     
-  delay(200);
-  
-  servo_2.write(45);   
-  delay(200);
- 
-  servo_3.write(45);   
-  delay(200);
-  
-  servo_4.write(135);   
-  delay(200);
-}
-if(RIGHT==1){
-  for (int i = 0; i<45; i+=5)
-  {
-  servo_1.write(45+i);
-  servo_2.write(45+i);
-  servo_3.write(45+i);
-  servo_4.write(45+i);
-    delay(3);
-  }
-  delay(200);
-  
-  servo_1.write(45);
-  delay(200);
-  
-  servo_2.write(45);
-  delay(200);
- 
-  servo_3.write(45);
-  delay(200);
-  
-  servo_4.write(45);
-  delay(200);
-}
-if(STOP==1){
-  servo_1.write(90);
-  delay(200);
-  
-  servo_2.write(90);
-  delay(200);
- 
-  servo_3.write(90);
-  delay(200);
-  
-  servo_4.write(90);
-  delay(200);
-}
-}
+ if(TEMP==1){
+ }
 
+ if(TEMP==1){
+ }
+ 
+}
 // создание HTML страницы
 String webPage()
 {
@@ -127,31 +59,23 @@ String web;
 web += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/> <meta charset=\"utf-8\"><title>Web Server</title><style>button{color:red;padding: 10px 27px;}</style></head>";
 
 // выводим название страницы
-web += "<h1 style=\"text-align: center;font-family: Open sans;font-weight: 100;font-size: 20px;\">Mr.Bebra</h1><div>";
+web += "<h1 style=\"text-align: center;font-family: Open sans;font-weight: 100;font-size: 20px;\">DHT Control</h1><div>";
 
 // заголовок
 web += "<p style=\"text-align: center;margin-top: 0px;margin-bottom: 5px;\">KOD_ROBOTA</p>";
 
 // создание индикаторного блока
-if (LEFT == 1)
+if (TEMP == 1)
 {
-web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #228B22;margin: 0 auto;\">LEFT</div>";
+web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #228B22;margin: 0 auto;\">TEMP</div>";
 }
-if (FORW == 1)
+if (HUM == 1)
 {
-web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #FF8C00;margin: 0 auto;\">FORWARD</div>";
-}
-if (RIGHT == 1)
-{
-web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #228B22;margin: 0 auto;\">RIGHT</div>";
-}
-if (STOP == 1)
-{
-web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #4169E1;margin: 0 auto;\">STOP</div>";
+web += "<div style=\"text-align: center;width: 98px;color:white ;padding: 10px 30px;background-color: #FF8C00;margin: 0 auto;\">HUM</div>";
 }
 
 // отображение кнопок
-web += "<div style=\"text-align: center;margin: 5px 0px;\"> <a href=\"LEFT\"><button>LEFT</button></a>&nbsp;<a href=\"FORWARD\"><button>FORWARD</button></a>&nbsp;<a href=\"RIGHT\"><button>RIGHT</button></a>&nbsp;<a href=\"STOP\"><button>STOP</button></a></div>"; 
+web += "<div style=\"text-align: center;margin: 5px 0px;\"> <a href=\"LEFT\"><button>TEMP</button></a>&nbsp;<a href=\"HUM\"><button>FORWARD</button></a>&nbsp;"; 
 
 web += "</div>";
 return (web);
